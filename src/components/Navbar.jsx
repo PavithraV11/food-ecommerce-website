@@ -5,7 +5,6 @@ import { useTheme } from "../context/ThemeContext";
 import products from "../data/products";
 
 function Navbar() {
-
     const { totalItems, toggleCart } = useCart();
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
@@ -17,6 +16,7 @@ function Navbar() {
     const results = query.trim()
         ? products.filter((p) => {
             const q = query.toLowerCase();
+
             return (
                 p.title.toLowerCase().includes(q) ||
                 p.category.toLowerCase().includes(q) ||
@@ -31,8 +31,12 @@ function Navbar() {
                 setShowResults(false);
             }
         }
+
         document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
     }, []);
 
     function goToProducts(q) {
@@ -57,17 +61,58 @@ function Navbar() {
 
             <div className="nav-links">
 
-                <a href="/">Home</a>
+                {/* Home */}
+                <a
+                    href="#/"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/");
+                    }}
+                >
+                    Home
+                </a>
 
-                <a href="/products">Products</a>
+                {/* Products */}
+                <a
+                    href="#/products"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/products");
+                    }}
+                >
+                    Products
+                </a>
 
-                <a href="/about">About</a>
+                {/* About */}
+                <a
+                    href="#/about"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/about");
+                    }}
+                >
+                    About
+                </a>
 
-                <a href="/reviews">Reviews</a>
+                {/* Reviews */}
+                <a
+                    href="#/reviews"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/reviews");
+                    }}
+                >
+                    Reviews
+                </a>
 
             </div>
 
-            <form className="search-box" ref={boxRef} onSubmit={handleSubmit}>
+            {/* Search */}
+            <form
+                className="search-box"
+                ref={boxRef}
+                onSubmit={handleSubmit}
+            >
 
                 <input
                     type="text"
@@ -77,13 +122,16 @@ function Navbar() {
                         setQuery(e.target.value);
                         setShowResults(true);
                     }}
-                    onFocus={() => query.trim() && setShowResults(true)}
+                    onFocus={() =>
+                        query.trim() && setShowResults(true)
+                    }
                 />
 
                 <button type="submit">🔍</button>
 
                 {showResults && query.trim() && (
                     <div className="search-dropdown">
+
                         {results.length > 0 ? (
                             results.map((item) => (
                                 <div
@@ -91,23 +139,38 @@ function Navbar() {
                                     className="search-result"
                                     onClick={() => handleSelect(item.title)}
                                 >
-                                    <img src={item.image} alt={item.title} />
+
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                    />
+
                                     <div className="search-result-info">
-                                        <p className="search-result-title">{item.title}</p>
+
+                                        <p className="search-result-title">
+                                            {item.title}
+                                        </p>
+
                                         <p className="search-result-meta">
                                             {item.category} · ₹{item.price}
                                         </p>
+
                                     </div>
+
                                 </div>
                             ))
                         ) : (
-                            <div className="search-no-result">No dishes found</div>
+                            <div className="search-no-result">
+                                No dishes found
+                            </div>
                         )}
+
                     </div>
                 )}
 
             </form>
 
+            {/* Theme Toggle */}
             <button
                 className="theme-toggle"
                 onClick={toggleTheme}
@@ -117,11 +180,19 @@ function Navbar() {
                 {theme === "light" ? "🌙" : "☀️"}
             </button>
 
-            <button className="cart-btn" onClick={toggleCart}>
+            {/* Cart */}
+            <button
+                className="cart-btn"
+                onClick={toggleCart}
+            >
                 🛒 Cart
+
                 {totalItems > 0 && (
-                    <span className="cart-badge">{totalItems}</span>
+                    <span className="cart-badge">
+                        {totalItems}
+                    </span>
                 )}
+
             </button>
 
         </div>
